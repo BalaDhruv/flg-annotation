@@ -7,7 +7,7 @@ import 'package:generators/src/middleware_generator.dart';
 import 'package:generators/src/reducer_generator.dart';
 import 'package:source_gen/source_gen.dart';
 
-Builder generateJsonClass(BuilderOptions options) {
+Builder generateReduxcode(BuilderOptions options) {
   return PartBuilder(
     [
       JsonGenerator(),

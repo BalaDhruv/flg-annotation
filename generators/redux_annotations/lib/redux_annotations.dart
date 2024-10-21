@@ -1,4 +1,4 @@
-library annotations;
+library redux_annotations;
 
 export 'src/json_generator.dart';
 export 'src/action_generator.dart';
