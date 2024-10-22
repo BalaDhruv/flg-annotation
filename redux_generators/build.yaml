@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      redux_generators|redux_annotations:
+        enabled: true
+
+builders:
+  redux_generators:
+    target: ":redux_generators"
+    import: "package:redux_generators/redux_generators.dart"
+    builder_factories: ["generateReduxcode"]
+    build_extensions: { ".dart": [".g.dart"] }
+    auto_apply: dependents
+    build_to: source 
+    # applies_builders: ["source_gen|combining_builder"] 
