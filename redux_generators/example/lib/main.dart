@@ -57,11 +57,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  changeState() {
-    SignUpState signUpState = SignUpState.initial();
-    signUpState.copyWith(error: 'value is null');
-    print(signUpState.error);
-  }
+  // changeState() {
+  //   SignUpState signUpState = SignUpState.initial();
+  //   signUpState.copyWith(error: 'value is null');
+  //   print(signUpState.error);
+  // }
 
   void _incrementCounter() {
     setState(() {

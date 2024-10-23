@@ -2,9 +2,7 @@
 // import 'package:redux/redux.dart';
 // part 'middleware.g.dart';
 
-// @ReduxMiddleware
-// class GetBidIncrement {
-//   GetBidIncrement();
+// @ReduxMiddleware('function discription')
+// void getBidIncrement() {
+//   print('hello, world');
 // }
-
-// GetBidIncrement getincr = GetBidIncrement();

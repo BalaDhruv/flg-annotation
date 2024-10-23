@@ -1,5 +1,6 @@
-class MiddlewareGenAnnotation {
-  const MiddlewareGenAnnotation();
+class ReduxMiddleware {
+  final String description;
+  const ReduxMiddleware([this.description = '']);
 }
 
-const ReduxMiddleware = MiddlewareGenAnnotation();
+// const ReduxMiddleware = MiddlewareGenAnnotation();

@@ -7,10 +7,26 @@ class ModelVisitor extends SimpleElementVisitor<void> {
   String className = '';
   Map<String, dynamic> fields = {};
   final List<FunctionInfo> functions = [];
+  List<ParameterElement> constructorParameters = [];
+
   @override
   void visitConstructorElement(ConstructorElement element) {
     final returnType = element.returnType.toString();
     className = returnType.replaceFirst('*', '');
+    print('----inside construct element -----');
+    if (element.isFactory) {
+      print('----inside construct element infactory -----');
+      for (var i = 0; i < element.parameters.length; i++) {
+        print(
+            'parameters: name = ${element.parameters[i].name} , type = ${element.parameters[i].type}');
+      }
+
+      print(className);
+      if (element.parameters.isNotEmpty) {
+        constructorParameters.addAll(element.parameters);
+      }
+      print(constructorParameters);
+    }
   }
 
   @override

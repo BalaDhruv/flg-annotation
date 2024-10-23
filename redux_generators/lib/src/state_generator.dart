@@ -1,5 +1,7 @@
 // ignore_for_file: implementation_imports, depend_on_referenced_packages
 
+import 'dart:convert';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:redux_annotations/redux_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
@@ -8,78 +10,141 @@ import 'package:source_gen/source_gen.dart';
 
 class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
+  ) async {
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    // print('element:$element');
+    // print("annotatio :$annotation");
+    // print("buildStep :$buildStep");
     print('inside stategenerat');
     final buffer = StringBuffer();
 
     String className = visitor.className;
+    String classImpl = '_\$${className}Impl';
+    String classImplCopywith = '_\$\$${className}ImplCopyWith';
+    String classImplCopywithImpl = '__\$\$${className}ImplCopyWithImpl';
+    String classCopyWith = '\$${className}CopyWith';
+    String classCopyWithImpl = '_\$${className}CopyWithImpl';
 
-    // --------------------Start Initial Generation Code--------------------//
-    buffer.writeln('// Initial Method');
-    buffer.writeln('$className _\$${className}Initial({ ');
-    for (int i = 0; i < visitor.fields.length; i++) {
-      buffer.writeln(
-        '${visitor.fields.values.elementAt(i).toString().contains('?') ? visitor.fields.values.elementAt(i).replaceFirst('?', '') : visitor.fields.values.elementAt(i)}? ${visitor.fields.keys.elementAt(i)},',
-      );
+    List<ParameterElement> constructorParameters =
+        visitor.constructorParameters;
+    for (var parameter in constructorParameters) {
+      print('Parameter: ${parameter.name}, Type: ${parameter.type}');
     }
-    buffer.writeln('})=>');
-    buffer.write('$className(');
-    for (int i = 0; i < visitor.fields.length; i++) {
-      String dataType =
-          visitor.fields.values.elementAt(i).toString().contains('?')
-              ? visitor.fields.values.elementAt(i).replaceFirst('?', '')
-              : visitor.fields.values.elementAt(i);
-      if (dataType == 'bool') {
-        buffer.writeln('${visitor.fields.keys.elementAt(i)} ?? false,');
-      } else if (dataType == 'String') {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? '',");
-      } else if (dataType == 'int') {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0,");
-      } else if (dataType == 'double') {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0.0,");
-      } else if (dataType == 'num') {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0,");
-      } else if (dataType.contains('List')) {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? [],");
-      } else if (dataType.contains('Map')) {
-        buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? {},");
-      } else {
-        buffer.writeln(
-            "${visitor.fields.keys.elementAt(i)} ?? $dataType.empty(),");
-      }
-    }
-    buffer.writeln(');');
-    buffer.toString();
-    // --------------------End Initial Generation Code--------------------//
+    //generate code like Freezed
+    buffer.writeln('T _\$identity<T>(T value) => value;');
 
-    // --------------------Start copyWith Generation Code--------------------//
+    buffer.writeln('final _privateConstructorUsedError = UnsupportedError(');
     buffer.writeln(
-        "// Extension for a $className class to provide 'copyWith' method");
-    buffer.writeln('extension \$${className}Extension on $className {');
-    buffer.writeln('$className copyWith({');
-    for (int i = 0; i < visitor.fields.length; i++) {
+        "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.);");
+    // create Mixin
+    buffer.writeln('mixin _\$$className {');
+    for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
-        '${visitor.fields.values.elementAt(i).toString().contains('?') ? visitor.fields.values.elementAt(i).replaceFirst('?', '') : visitor.fields.values.elementAt(i)}? ${visitor.fields.keys.elementAt(i)},',
+        '${constructorParameters[i].type} get ${constructorParameters[i].name} => throw _privateConstructorUsedError;',
       );
     }
-    buffer.writeln('}) {');
-    buffer.writeln('return $className(');
-    for (int i = 0; i < visitor.fields.length; i++) {
+    // create a copy of class
+    buffer.writeln('/// Create a copy of SignUpState');
+    buffer.writeln(
+        '/// /// with the given fields replaced by the non-null parameter values.');
+    buffer.writeln(' $classCopyWith<$className> get copyWith =>');
+    buffer.writeln('throw _privateConstructorUsedError;');
+
+    buffer.writeln('}');
+    //define copywithFunction
+    buffer.writeln('abstract class $classCopyWith<\$Res> {');
+    buffer.writeln('factory $classCopyWith(');
+    buffer.writeln('$className value, \$Res Function($className) then) =');
+    buffer.writeln(' $classCopyWithImpl<\$Res, $className>;');
+    buffer.writeln('\$Res call({');
+    for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
-        "${visitor.fields.keys.elementAt(i)} ?? this.${visitor.fields.keys.elementAt(i)},",
+        '${constructorParameters[i].type} ${constructorParameters[i].name},',
       );
     }
-    buffer.writeln(');');
-    buffer.writeln('}');
-    buffer.writeln('}');
-    // --------------------End copyWith Generation Code--------------------//
+    buffer.writeln('});');
+
+    // End of Genrate code
     return buffer.toString();
+    /*
+    // Get the AssetId (reference to the current file)
+    final assetId = buildStep.inputId;
+
+    // Read the entire file's content as a string
+    final fileContent = await buildStep.readAsString(assetId);
+
+    // Optionally, you can print or manipulate the content
+    // print('File content for ${assetId.path}:\n$fileContent');
+
+    // Return or process the content further
+    print('inside stategenerat cose');
+    // return 'File content:\n$fileContent';
+    */
+
+    // // --------------------Start Initial Generation Code--------------------//
+    // buffer.writeln('// Initial Method');
+    // buffer.writeln('$className _\$${className}Initial({ ');
+    // for (int i = 0; i < visitor.fields.length; i++) {
+    //   buffer.writeln(
+    //     '${visitor.fields.values.elementAt(i).toString().contains('?') ? visitor.fields.values.elementAt(i).replaceFirst('?', '') : visitor.fields.values.elementAt(i)}? ${visitor.fields.keys.elementAt(i)},',
+    //   );
+    // }
+    // buffer.writeln('})=>');
+    // buffer.write('$className(');
+    // for (int i = 0; i < visitor.fields.length; i++) {
+    //   String dataType =
+    //       visitor.fields.values.elementAt(i).toString().contains('?')
+    //           ? visitor.fields.values.elementAt(i).replaceFirst('?', '')
+    //           : visitor.fields.values.elementAt(i);
+    //   if (dataType == 'bool') {
+    //     buffer.writeln('${visitor.fields.keys.elementAt(i)} ?? false,');
+    //   } else if (dataType == 'String') {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? '',");
+    //   } else if (dataType == 'int') {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0,");
+    //   } else if (dataType == 'double') {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0.0,");
+    //   } else if (dataType == 'num') {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? 0,");
+    //   } else if (dataType.contains('List')) {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? [],");
+    //   } else if (dataType.contains('Map')) {
+    //     buffer.writeln("${visitor.fields.keys.elementAt(i)} ?? {},");
+    //   } else {
+    //     buffer.writeln(
+    //         "${visitor.fields.keys.elementAt(i)} ?? $dataType.empty(),");
+    //   }
+    // }
+    // buffer.writeln(');');
+    // buffer.toString();
+    // // --------------------End Initial Generation Code--------------------//
+
+    // // --------------------Start copyWith Generation Code--------------------//
+    // buffer.writeln(
+    //     "// Extension for a $className class to provide 'copyWith' method");
+    // buffer.writeln('extension \$${className}Extension on $className {');
+    // buffer.writeln('$className copyWith({');
+    // for (int i = 0; i < visitor.fields.length; i++) {
+    //   buffer.writeln(
+    //     '${visitor.fields.values.elementAt(i).toString().contains('?') ? visitor.fields.values.elementAt(i).replaceFirst('?', '') : visitor.fields.values.elementAt(i)}? ${visitor.fields.keys.elementAt(i)},',
+    //   );
+    // }
+    // buffer.writeln('}) {');
+    // buffer.writeln('return $className(');
+    // for (int i = 0; i < visitor.fields.length; i++) {
+    //   buffer.writeln(
+    //     "${visitor.fields.keys.elementAt(i)} ?? this.${visitor.fields.keys.elementAt(i)},",
+    //   );
+    // }
+    // buffer.writeln(');');
+    // buffer.writeln('}');
+    // buffer.writeln('}');
+    // --------------------End copyWith Generation Code--------------------//
 
 // // full original method
 //     buffer.writeln('class $className {');
