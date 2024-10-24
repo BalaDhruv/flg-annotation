@@ -1,3 +1,4 @@
+import 'package:examble/action.dart';
 import 'package:examble/state.dart';
 import 'package:flutter/material.dart';
 
@@ -57,11 +58,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  // changeState() {
-  //   SignUpState signUpState = SignUpState.initial();
-  //   signUpState.copyWith(error: 'value is null');
-  //   print(signUpState.error);
-  // }
+  changeState() {
+    SignUpState signUpState = SignUpState.initial();
+    print(signUpState.isSignedUp);
+    print(signUpState.error);
+    print(signUpState.loading);
+
+    SignUpState state = signUpState.copyWith(error: 'my Error');
+    print(state.error);
+    GetAction action = GetAction(amount: 100);
+    print(action.amount);
+    action.amount = 250;
+    print(action.amount);
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -122,7 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          _incrementCounter();
+          changeState();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

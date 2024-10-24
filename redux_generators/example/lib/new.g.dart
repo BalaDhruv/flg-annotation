@@ -1,5 +1,4 @@
-final _privateConstructorUsedError = UnsupportedError(
-'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'state.dart';
 
@@ -8,16 +7,18 @@ part of 'state.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+final _privateConstructorUsedError = UnsupportedError(
+'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.');
 // Initial Method
-SignUpState _$SignUpStateInitial({ 
-bool? loading,
-bool? isSignedUp,
-String? error,
-})=>
-SignUpState( loading: loading ?? false,
- isSignedUp: isSignedUp ?? false,
-error: error ?? '',
-);
+// SignUpState _$SignUpStateInitial({ 
+// bool? loading,
+// bool? isSignedUp,
+// String? error,
+// })=>
+// SignUpState(loading ?? false,
+// isSignedUp ?? false,
+// error ?? '',
+// );
 mixin _$SignUpState {
 bool? get loading => throw _privateConstructorUsedError;
 bool? get isSignedUp => throw _privateConstructorUsedError;
@@ -93,11 +94,11 @@ this.isSignedUp,
 this.error,
 });
 @override
-final bool? loading;
+final bool?  loading;
 @override
-final bool? isSignedUp;
+final bool?  isSignedUp;
 @override
-final String? error;
+final String?  error;
 @override
 String toString() {
  return 'SignUpState(loading : $loading, isSignedUp : $isSignedUp, error : $error)';

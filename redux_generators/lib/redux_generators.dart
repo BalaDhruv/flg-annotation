@@ -16,5 +16,9 @@ Builder generateReduxcode(BuilderOptions options) {
       ReducerGenerator()
     ],
     '.g.dart',
+//     header: '''
+// final _privateConstructorUsedError = UnsupportedError(
+// 'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');
+//     ''',
   );
 }

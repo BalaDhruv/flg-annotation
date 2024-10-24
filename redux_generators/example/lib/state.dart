@@ -2,11 +2,11 @@ import 'package:redux_annotations/redux_annotations.dart';
 part 'state.g.dart';
 
 @ReduxState
-class SignUpState {
+class SignUpState with _$SignUpState {
   const factory SignUpState({
-    required bool loading,
-    required bool isSignedUp,
-    required String error,
+    bool? loading,
+    bool? isSignedUp,
+    String? error,
   }) = _SignUpState;
 
   factory SignUpState.initial() => _$SignUpStateInitial();
