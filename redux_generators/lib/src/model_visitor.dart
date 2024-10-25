@@ -15,27 +15,30 @@ class ModelVisitor extends SimpleElementVisitor<void> {
     className = returnType.replaceFirst('*', '');
     print('----inside construct element -----');
     if (element.isFactory) {
-      print('----inside construct element infactory -----');
-      for (var i = 0; i < element.parameters.length; i++) {
-        print(
-            'parameters: name = ${element.parameters[i].name} , type = ${element.parameters[i].type}');
-      }
+      // print('----inside construct element infactory -----');
+      // for (var i = 0; i < element.parameters.length; i++) {
+      //   // print(
+      //   //     'parameters: name = ${element.parameters[i].name} , type = ${element.parameters[i].type}');
+      // }
 
-      print(className);
+      // print(className);
       if (element.parameters.isNotEmpty) {
         constructorParameters.addAll(element.parameters);
       }
-      print(constructorParameters);
+      // print(constructorParameters);
     }
   }
 
   @override
   void visitFieldElement(FieldElement element) {
+    print('----inside field element -----');
+
     fields[element.name] = element.type.toString().replaceFirst('*', '');
   }
 
   @override
   void visitFunctionElement(FunctionElement element) {
+    print('----inside Function element -----');
     functions.add(FunctionInfo(
       name: element.name,
       type: element.returnType
@@ -55,25 +58,22 @@ class ModelVisitor extends SimpleElementVisitor<void> {
 
   @override
   void visitMethodElement(MethodElement element) {
+    print('----inside method element -----');
     // Capture the method name and its parameters
-    print(
-      element.returnType
-          .getDisplayString(withNullability: false)
-          .toString()
-          .replaceFirst('*', ''),
-    );
+    // print(
+    //   element.returnType
+    //       .getDisplayString(withNullability: false)
+    //       .toString()
+    //       .replaceFirst('*', ''),
+    // );
     functions.add(FunctionInfo(
       name: element.name,
-      type: element.returnType
-          .getDisplayString(withNullability: false)
-          .toString()
-          .replaceFirst('*', ''),
+      type: element.returnType.toString().replaceFirst('*', ''),
       parameters: element.parameters.map((param) {
         print(param.type.getDisplayString().toString().replaceFirst("*", ''));
         return ParametersInfo(
             name: param.name,
-            type:
-                param.type.getDisplayString().toString().replaceFirst("*", ''));
+            type: param.type.toString().replaceFirst("*", ''));
       }).toList(),
     ));
   }

@@ -1,9 +1,9 @@
 import 'package:redux_annotations/redux_annotations.dart';
-part 'state.g.dart';
+part 'state.a.dart';
 
-@ReduxState
+// @ReduxState
 class SignUpState with _$SignUpState {
-  const factory SignUpState({
+  factory SignUpState({
     bool? loading,
     bool? isSignedUp,
     String? error,

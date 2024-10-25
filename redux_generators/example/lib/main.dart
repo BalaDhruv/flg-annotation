@@ -66,10 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     SignUpState state = signUpState.copyWith(error: 'my Error');
     print(state.error);
-    GetAction action = GetAction(amount: 100);
-    print(action.amount);
-    action.amount = 250;
-    print(action.amount);
+    GetAction action = GetAction(name: 'chandru');
+    state.error = '';
+    print(action.name);
+    action.id = 250;
+    print(action.id);
   }
 
   void _incrementCounter() {

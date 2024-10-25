@@ -1,30 +1,30 @@
 import 'package:redux_annotations/redux_annotations.dart';
 
-part 'action.a.dart';
+part 'action2.a.dart';
 
 // @ReduxAction
-class GetAction with _$GetAction {
-  factory GetAction({
+class SetAction with _$SetAction {
+  factory SetAction({
     String? name,
-    int? id,
     bool? isSuccess,
+    double? amount,
     List<BidIncrementItemModel>? bidIncrementDetails,
-  }) = _GetAction;
+  }) = _SetAction;
 }
 
 // @ReduxAction
-class SuccessAction with _$SuccessAction {
-  factory SuccessAction({
+class SetSuccessAction with _$SetSuccessAction {
+  factory SetSuccessAction({
     bool? isSuccess,
     List<BidIncrementItemModel>? bidIncrementDetails,
-  }) = _SuccessAction;
+  }) = _SetSuccessAction;
 }
 
 class BidIncrementItemModel {}
 
 // @ReduxAction
-class FailedAction with _$FailedAction {
-  factory FailedAction({
+class SetFailedAction with _$SetFailedAction {
+  factory SetFailedAction({
     String? error,
-  }) = _FailedAction;
+  }) = _SetFailedAction;
 }

@@ -8,6 +8,7 @@ import 'package:redux_generators/src/reducer_generator.dart';
 import 'package:source_gen/source_gen.dart';
 
 Builder generateReduxcode(BuilderOptions options) {
+  print('generateReduxcode : ${options.config},options :$options');
   return PartBuilder(
     [
       StateGenerator(),
@@ -16,9 +17,5 @@ Builder generateReduxcode(BuilderOptions options) {
       ReducerGenerator()
     ],
     '.g.dart',
-//     header: '''
-// final _privateConstructorUsedError = UnsupportedError(
-// 'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');
-//     ''',
   );
 }

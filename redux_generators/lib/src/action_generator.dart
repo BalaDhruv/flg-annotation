@@ -1,5 +1,7 @@
 // ignore_for_file: implementation_imports, depend_on_referenced_packages
 
+import 'dart:math';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:redux_generators/src/model_visitor.dart';
@@ -7,15 +9,16 @@ import 'package:redux_annotations/redux_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
+  String path = '';
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
+  ) async {
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
-    print('inside Actiongenerat');
+    print('----------inside Actiongenerat ${Random().nextInt(100)} ---------');
     final buffer = StringBuffer();
     String className = visitor.className;
     String concreteClassName = '_$className';
@@ -26,22 +29,28 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
     // String classCopyWithImpl = '_\$${className}CopyWithImpl';
     List<ParameterElement> constructorParameters =
         visitor.constructorParameters;
+    // bool isErrorVariableCreated = false;
+    // Get the AssetId (reference to the current file)
+    final assetId = buildStep.inputId;
+    print(assetId.path);
+    String currentPath = assetId.path;
+    print('path : $path ,----, CurrentPath : $currentPath');
     // helper function
+    if (path != currentPath) {
+      print('-------inside fina error create------');
+      buffer.writeln('final _privateConstructorUsedError  = UnsupportedError(');
+      buffer.writeln(
+          "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');");
+      path = currentPath;
+    }
 
-    buffer.writeln('final _privateConstructorUsedError = UnsupportedError(');
-    buffer.writeln(
-        "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');");
     // ----------------- create Mixin -----------------
     buffer.writeln('mixin _\$$className {');
     // Getter
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
-        '${constructorParameters[i].type} get ${constructorParameters[i].name} => throw _privateConstructorUsedError;',
+        '${constructorParameters[i].type} get ${constructorParameters[i].name} => throw _privateConstructorUsedError ;',
       );
-    }
-    // Setter
-    buffer.writeln(' // Setter');
-    for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
         'set ${constructorParameters[i].name} (${constructorParameters[i].type} value) => throw _privateConstructorUsedError;',
       );
@@ -50,41 +59,35 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
     // ----------------- End create Mixin -----------------
     // ----------------- Create concrete class(classImpl) for _class -----------------
     buffer.writeln('class $classImpl implements $concreteClassName {');
-    // Private fields to store data
-    buffer.writeln(' // Private fields to store data');
-    for (int i = 0; i < visitor.constructorParameters.length; i++) {
-      buffer.writeln(
-        '${constructorParameters[i].type} _${constructorParameters[i].name};',
-      );
-    }
+    // // Private fields to store data
+    // buffer.writeln(' // Private fields to store data');
+    // for (int i = 0; i < visitor.constructorParameters.length; i++) {
+    //   buffer.writeln(
+    //     '${constructorParameters[i].type} _${constructorParameters[i].name};',
+    //   );
+    // }
     // Actual Constructor
     buffer.writeln('$classImpl({');
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
-        '${constructorParameters[i].type} ${constructorParameters[i].name},',
+        'this.${constructorParameters[i].name},',
       );
     }
-    buffer.writeln('}) :');
-    for (int i = 0; i < visitor.constructorParameters.length; i++) {
-      buffer.writeln(
-        '_${constructorParameters[i].name} = ${constructorParameters[i].name} ${(i + 1) == visitor.constructorParameters.length ? '' : ','}',
-      );
-    }
-    buffer.writeln(';');
+    buffer.writeln('});');
     // Actual Variables
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln('@override');
       buffer.writeln(
-        '${constructorParameters[i].type} get ${constructorParameters[i].name} => _${constructorParameters[i].name} ;',
+        '${constructorParameters[i].type} ${constructorParameters[i].name};',
       );
     }
 
-    // Setters for each field
-    for (int i = 0; i < visitor.constructorParameters.length; i++) {
-      buffer.writeln('@override');
-      buffer.writeln(
-          'set ${constructorParameters[i].name}(${constructorParameters[i].type} value) { _${constructorParameters[i].name} = value;}');
-    }
+    // // Setters for each field
+    // for (int i = 0; i < visitor.constructorParameters.length; i++) {
+    //   buffer.writeln('@override');
+    //   buffer.writeln(
+    //       'set ${constructorParameters[i].name}(${constructorParameters[i].type} value) { _${constructorParameters[i].name} = value;}');
+    // }
     // Actual toString Method
     List<String> toStringList = constructorParameters.map(
       (e) {
@@ -114,9 +117,6 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
       buffer.writeln(
         '${constructorParameters[i].type} get ${constructorParameters[i].name};',
       );
-    }
-    // New setters for each field
-    for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln('@override');
       buffer.writeln(
         'set ${constructorParameters[i].name}(${constructorParameters[i].type} value);',

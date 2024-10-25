@@ -7,6 +7,7 @@ import 'package:redux_generators/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
+  String path = '';
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -36,10 +37,20 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
     // }
     //generate code like Freezed
     buffer.writeln('T _\$identity<T>(T value) => value;');
+    // Get the AssetId (reference to the current file)
+    final assetId = buildStep.inputId;
+    print(assetId.path);
+    String currentPath = assetId.path;
+    print('path : $path ,----, CurrentPath : $currentPath');
+    // helper function
+    if (path != currentPath) {
+      print('-------inside fina error create------');
+      buffer.writeln('final _privateConstructorUsedError  = UnsupportedError(');
+      buffer.writeln(
+          "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');");
+      path = currentPath;
+    }
 
-    buffer.writeln('final _privateConstructorUsedError = UnsupportedError(');
-    buffer.writeln(
-        "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');");
 // ------- Initail method -----------
     buffer.writeln('// Initial Method');
     buffer.writeln('$className _\$${className}Initial({ ');
@@ -80,6 +91,10 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
         '${constructorParameters[i].type} get ${constructorParameters[i].name} => throw _privateConstructorUsedError;',
+      );
+
+      buffer.writeln(
+        'set ${constructorParameters[i].name} (${constructorParameters[i].type} value)  => throw _privateConstructorUsedError;',
       );
     }
     // create a copy of class
@@ -183,7 +198,7 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
     // ----------------- Create concrete class(classImpl) for _class -----------------
     buffer.writeln('class $classImpl implements $concreteClassName {');
     // Actual Constructor
-    buffer.writeln('const $classImpl({');
+    buffer.writeln('$classImpl({');
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
         'this.${constructorParameters[i].name},',
@@ -194,7 +209,7 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln('@override');
       buffer.writeln(
-        'final ${constructorParameters[i].type} ${constructorParameters[i].name};',
+        '${constructorParameters[i].type} ${constructorParameters[i].name};',
       );
     }
     // Actual toString Method
@@ -242,7 +257,7 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
 
     // ----------------- create concrete class(_class) for class -----------------
     buffer.writeln('abstract class $concreteClassName implements $className {');
-    buffer.writeln('const factory $concreteClassName({');
+    buffer.writeln('factory $concreteClassName({');
     for (int i = 0; i < visitor.constructorParameters.length; i++) {
       buffer.writeln(
         'final ${constructorParameters[i].type} ${constructorParameters[i].name},',
@@ -254,6 +269,10 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
       buffer.writeln('@override');
       buffer.writeln(
         '${constructorParameters[i].type} get ${constructorParameters[i].name};',
+      );
+      buffer.writeln('@override');
+      buffer.writeln(
+        ' set ${constructorParameters[i].name} (${constructorParameters[i].type} value);',
       );
     }
     buffer.writeln('/// Create a copy of $className');
