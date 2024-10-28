@@ -1,8 +1,8 @@
 import 'package:redux_annotations/redux_annotations.dart';
 
-part 'action.a.dart';
+part 'action.g.dart';
 
-// @ReduxAction
+@ReduxAction
 class GetAction with _$GetAction {
   factory GetAction({
     String? name,
@@ -12,7 +12,7 @@ class GetAction with _$GetAction {
   }) = _GetAction;
 }
 
-// @ReduxAction
+@ReduxAction
 class SuccessAction with _$SuccessAction {
   factory SuccessAction({
     bool? isSuccess,
@@ -22,7 +22,7 @@ class SuccessAction with _$SuccessAction {
 
 class BidIncrementItemModel {}
 
-// @ReduxAction
+@ReduxAction
 class FailedAction with _$FailedAction {
   factory FailedAction({
     String? error,

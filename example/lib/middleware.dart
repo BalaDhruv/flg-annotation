@@ -16,7 +16,7 @@ import 'package:redux_annotations/redux_annotations.dart';
 // import '../../repo/model/api_responce.model.dart';
 // import '../../utils/routes.dart';
 // import '../app.state.dart';
-@ReduxMiddleware
+// @ReduxMiddleware
 Middleware<AppState> signUp(Repository repo) {
   return (Store<AppState> store, action, NextDispatcher dispatch) async {
     dispatch(action);

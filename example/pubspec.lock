@@ -426,7 +426,7 @@ packages:
   redux_generators:
     dependency: "direct dev"
     description:
-      path: ".."
+      path: "../redux_generators"
       relative: true
     source: path
     version: "0.0.1"

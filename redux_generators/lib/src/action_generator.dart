@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
-import 'package:redux_generators/src/model_visitor.dart';
+import 'package:redux_generators/src/visitors/model_visitor.dart';
 import 'package:redux_annotations/redux_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -18,7 +18,8 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
   ) async {
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
-    print('----------inside Actiongenerat ${Random().nextInt(100)} ---------');
+    print(
+        '----------inside start Action generat ${Random().nextInt(100)} ---------');
     final buffer = StringBuffer();
     String className = visitor.className;
     String concreteClassName = '_$className';
@@ -37,7 +38,7 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
     print('path : $path ,----, CurrentPath : $currentPath');
     // helper function
     if (path != currentPath) {
-      print('-------inside fina error create------');
+      print('-------inside final error create------');
       buffer.writeln('final _privateConstructorUsedError  = UnsupportedError(');
       buffer.writeln(
           "'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by ReduxAnnotations and you are not supposed to need it nor use it.');");
@@ -124,6 +125,8 @@ class ActionGenerator extends GeneratorForAnnotation<ActionGenAnnotation> {
     }
     buffer.writeln('}');
     // ----------------- End create concrete class(_class) for class -----------------
+    print(buffer.toString());
+    print('---------- inside end Action generat ---------');
     return buffer.toString();
 /*
     //  Actual Actions

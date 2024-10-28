@@ -13,7 +13,7 @@ class MiddlewareGenerator
     BuildStep buildStep,
   ) async {
     final visitor = ModelVisitorForMiddleware();
-    print('inside MiddlewareGenerat');
+    print('--------- inside MiddlewareGenerat -----------');
     // Get the AssetId (reference to the current file)
     final assetId = buildStep.inputId;
 

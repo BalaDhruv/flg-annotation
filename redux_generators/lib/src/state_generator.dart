@@ -3,7 +3,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:redux_annotations/redux_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
-import 'package:redux_generators/src/model_visitor.dart';
+import 'package:redux_generators/src/visitors/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
@@ -286,6 +286,7 @@ class StateGenerator extends GeneratorForAnnotation<StateGenAnnotation> {
     // ----------------- End create concrete class(_class) for class -----------------
 
     // ----------------- End of Genrate code -----------------
+    print(buffer.toString());
     return buffer.toString();
     /*
     // Get the AssetId (reference to the current file)

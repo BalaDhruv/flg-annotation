@@ -10,12 +10,15 @@ import 'package:source_gen/source_gen.dart';
 Builder generateReduxcode(BuilderOptions options) {
   print('generateReduxcode : ${options.config},options :$options');
   return PartBuilder(
-    [
-      StateGenerator(),
-      ActionGenerator(),
-      MiddlewareGenerator(),
-      ReducerGenerator()
-    ],
+    [StateGenerator(), ActionGenerator(), MiddlewareGenerator()],
     '.g.dart',
+  );
+}
+
+Builder generateReducercode(BuilderOptions options) {
+  print('generateReduxcode : ${options.config},options :$options');
+  return PartBuilder(
+    [ReducerGenerator()],
+    '.r.dart',
   );
 }
